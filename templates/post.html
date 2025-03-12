@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block title %}
+{% if blog is not none %}
+Blog.Lite | Edit Blog
+{% else%}
+Blog.Lite | Create Blog
+{% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="container">
+<div align="left">
+    {% if blog %}
+        <h2>Edit Your Blog</h2>
+    {% else %}
+        <h2>Make a Blog</h2>
+    {% endif %}
+</div>
+<form method="POST" enctype="multipart/form-data">
+    <label for="title">Title:</label>
+    <input
+    class="form-control"
+    type="text"
+    id="title"
+    name="title"
+    value="{{blog.title}}"/>
+    <label for="image">Image:</label>
+    <div class="input-group">
+        <input type="file" class="form-control" id="image" name="image"/>
+    </div>
+    {% if blog %}
+        <div class="form-text">Leave blank to keep the blog image unchanged</div>
+    {% endif %}
+    <label for="caption">Content:</label><br/>
+    <textarea
+    clalss="form-control"
+    id="caption"
+    name="caption"
+    cols=145
+    rows=15>{{blog.caption}}</textarea>
+    <br/>
+    <div align="center">
+        <button type="submit" class="btn btn-lg btn-primary">Post</button>
+    </div>
+</form>
+</div>
+{% endblock %}

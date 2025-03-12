@@ -1,0 +1,33 @@
+<nav class="navbar navbar-expand-lg" style="background-color: rgb(209, 127, 247);">
+    <div class="container-fluid">
+        <button 
+        class="navbar-toggler" 
+        type="button" 
+        data-bs-toggle="collapse"
+        data-bs-target="#navbar"
+        ><span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="navbar navbar-collapse" id="navbar">
+            <ul class="nav navbar-nav">
+                    <li><a class="nav-item nav-link text-white" href="{{ url_for('views.home') }}">Home</a></li>
+                    <li><a class="nav-item nav-link text-white" href="{{ url_for('views.discover') }}">Discover</a></li>
+                {% if user.is_authenticated %}
+                    <li><a class="nav-item nav-link text-white" href="{{ url_for('controllers.dashboard') }}">Dashboard</a></li>
+                    <li><a class="nav-item nav-link text-white" href="{{ url_for('controllers.post') }}">Create Post</a></li>
+                    <li><a class="nav-item nav-link text-white" href="{{ url_for('controllers.feed') }}">My Feed</a></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li><a class="nav-item nav-link text-white" href="{{ url_for('controllers.search') }}">Search</a></li>
+                <li><a class="nav-item nav-link text-white" href="{{ url_for('auth.logout') }}">Log Out</a></li>
+            </ul>
+                {% else %}
+            </ul>
+                <ul class="nav navbar-nav navbar-right">    
+                    <li><a class="nav-item nav-link text-white" href="{{ url_for('controllers.search') }}">Search</a></li>
+                    <li><a class="nav-item nav-link text-white" href="{{ url_for('auth.login') }}">Login</a></li>
+                    <li><a class="nav-item nav-link text-white" href="{{ url_for('auth.signup') }}">Sign Up</a></li>
+                </ul>
+                {% endif %}
+        </div>
+    </div>
+</nav>

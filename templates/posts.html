@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block title %}
+{% if display_user == logged_user %}
+Blog.Lite | Your Blogs
+{% else %}
+Blog.Lite | {{display_user.username}}'s Blogs
+{% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    {% if display_user %}
+        <h2 class="fs-2 fw-bold">{{display_user.username}}</h2>
+    {% else %}
+        <h2 class="fs-2 fw-bold">{{logged_user.username}}</h2>
+    {% endif %}
+    {% for post in posts %}
+        <div class="card border-dark">
+            <div class="card-header d-flex justify-content-between align-items-center" style="background-color: rgb(225, 198, 250);">
+                <a href="{{ url_for('controllers.userpage', name=post.user.username) }}">{{post.user.username}}</a>
+                {% if logged_user.id == post.author %}
+                <div class="btn-group">
+                    <button type="button" class="btn btn-sm btn-primary dropdown-toggle" data-bs-toggle="dropdown">
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li><a href="{{ url_for('controllers.edit', blog_id=post.id) }}" class="dropdown-item">Edit</a></li>
+                        <li><a href="{{ url_for('controllers.delete', blog_id=post.id) }}" class="dropdown-item">Delete</a></li>
+                    </ul>
+                </div>
+                {% endif %}
+            </div>
+            <div style="transform: rotate(0);">
+            <div class="card-body">
+                <div class="card-text text-truncate text-overflow">{{post.caption|safe}}</div>
+            </div>
+            <div class="card-footer text-muted" style="background-color: rgb(240, 229, 250);">{{post.timestamp}} <a href="#" class="stretched-link">View Blog</a></div>
+            </div>
+        </div>
+        <br/>
+    {% endfor %}
+</div>
+{% endblock %}

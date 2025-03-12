@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block title %}
+Blog.Lite | Search
+{% endblock%}
+
+{% block content %}
+<div class="container">
+<form method="POST" class="form-inline">
+    <div class="form-group">
+        <label for="name">Enter username:</label>
+        <input type="text" id="name" name="name" class="form-control"/><br/>
+        <button type="submit" class="btn btn-secondary">Search</button>
+    </div>
+</form>
+<br/>
+{% if searched_user is not none %}
+    {% for user in searched_user %}
+        {% if not user.id == logged_user.id %}
+            <a class="link-primary" href="{{ url_for('controllers.userpage', name=user.username) }}">{{user.username}}</a><br/>
+        {% endif %}
+    {% endfor %}
+{% endif %}
+</div>
+{% endblock %}

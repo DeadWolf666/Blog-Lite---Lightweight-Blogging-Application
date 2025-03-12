@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+
+{% block title %}
+{% if display_user %}
+Blog.Lite | {{display_user.username}}
+{% else %}
+Blog.Lite | Dashboard
+{% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    {% if display_user %}
+        <div class="jumbotron"><h2 class="fs-2 fw-bold">{{display_user.username}}</h2></div><br/>
+        {% if logged_user.is_authenticated %}
+            {% if not logged_user.is_following(display_user) %}
+            <form method="POST" class="form-inline"><button type="submit" class="btn btn-sm btn-primary">Follow</button></form><br/>
+            {% else %}
+            <form method="POST" class="form-inline"><button type="submit" class="btn btn-sm btn-outline-secondary">Following</button></form><br/>
+            {% endif %}
+        {% endif %}
+    {% else %}
+        <div class="jumbotron"><h2 class="fs-2 fw-bold">{{logged_user.username}}</h2></div><br/>
+    {% endif %}
+    <br/>
+    <div class="card-deck d-flex">
+        {% with card_title="Posts Made", card_content=posts.count(), card_link="See all posts" %}
+            {% if display_user %}
+                {% with card_link_href=url_for("controllers.posts_display", name=display_user.username) %}
+                    {% include "card.html" %}
+                {% endwith %}
+            {% else %}
+                {% with card_link_href=url_for("controllers.posts_display", name=logged_user.username) %}
+                    {% include "card.html" %}
+                {% endwith %}
+            {% endif %}
+        {% endwith %}
+        {% with card_title="Following", card_link="See all followed" %}
+            {% if display_user %}
+                {% with card_content=display_user.followed.all()|length, card_link_href=url_for("controllers.followed_display", name=display_user.username) %}
+                    {% include "card.html" %}
+                {% endwith %}
+            {% else %}
+                {% with card_content=logged_user.followed.all()|length, card_link_href=url_for("controllers.followed_display", name=logged_user.username) %}
+                    {% include "card.html" %}
+                {% endwith %}
+            {% endif %}
+        {% endwith %}
+        {% if display_user %}
+            {% with card_title="Followers", card_content=followers|length, card_link="See all followers", card_link_href=url_for("controllers.followers_display", name=display_user.username) %}
+                {% include "card.html" %}
+            {% endwith %}
+        {% else %}
+            {% with card_title="Followers", card_content=followers|length, card_link="See all followers", card_link_href=url_for("controllers.followers_display", name=logged_user.username) %}
+                {% include "card.html" %}
+            {% endwith %}
+        {% endif %}
+    </div><br/>
+    {% for post in posts %}
+        <div class="card border-dark">
+            <div class="card-header d-flex justify-content-between align-items-center" style="background-color: rgb(225, 198, 250);">
+                <a href="{{ url_for('controllers.userpage', name=post.user.username) }}">{{post.user.username}}</a>
+                {% if logged_user.id == post.author %}
+                <div class="btn-group">
+                    <button type="button" class="btn btn-sm btn-primary dropdown-toggle" data-bs-toggle="dropdown">
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li><a href="{{ url_for('controllers.edit', blog_id=post.id) }}" class="dropdown-item">Edit</a></li>
+                        <li><a href="{{ url_for('controllers.delete', blog_id=post.id) }}" class="dropdown-item">Delete</a></li>
+                    </ul>
+                </div>
+                {% endif %}
+            </div>
+            <div style="transform: rotate(0);">
+            <div class="card-body">
+                <div class="card-text text-truncate text-overflow">{{post.caption|safe}}</div>
+            </div>
+            <div class="card-footer text-muted" style="background-color: rgb(240, 229, 250);">{{post.timestamp}} <a href="{{ url_for('views.display', blog_id=post.id) }}" class="stretched-link">View Blog</a></div>
+            </div>
+        </div>
+        <br/>
+    {% endfor %}
+</div>
+{% endblock %}

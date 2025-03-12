@@ -1,0 +1,6 @@
+Core Functionality
+- User signup and login
+- User profile view with basic stats
+- Blog post management
+- Search and follow/unfollow others
+- User's feed

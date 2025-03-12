@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block title %}
+{% if display_user == logged_user %}
+    Blog.Lite | Your followers
+{% else %}
+    Blog.Lite | {{display_user.username}}'s followers
+{% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2 class="fs-2 fw-bold">Followed</h2><br/>
+    {% for follower in followers %}
+        <a href="{{ url_for('controllers.userpage', name=follower.username) }}">{{follower.username}}</a><br>
+    {% endfor %}
+</div>
+{% endblock %}
